@@ -1,0 +1,7 @@
+flask
+face_recognition
+Pillow
+numpy
+requests
+waitress
+git+https://github.com/ageitgey/face_recognition_models
