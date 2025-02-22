@@ -1,7 +1,7 @@
 import io
 import base64
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 from flask import Flask, jsonify, request
 import requests
 import face_recognition
@@ -30,7 +30,13 @@ def decode_image(image_base64):
         image_bytes = base64.b64decode(image_base64)
         image = Image.open(io.BytesIO(image_bytes))
         # Convert image format to RGB (if image is in RGBA or grayscale)
+        image = ImageOps.exif_transpose(image)
         image = image.convert('RGB')
+        
+        # max_size = 1000
+        # if max(image.size) > max_size:
+        #     image.thumbnail((max_size, max_size), Image.LANCZOS)
+        
         return np.array(image)
     except Exception as e:
         print("Error decoding image:", e)
