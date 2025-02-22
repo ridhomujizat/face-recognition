@@ -86,7 +86,7 @@ def verify():
     if not unknown_face_encodings:
         return jsonify({'error': 'No face found in input image'}), 400
 
-    match = False
+    # match = False
     # Compare with each Ronaldo image
     similarity_list = []
     compare_list = []
@@ -106,7 +106,17 @@ def verify():
                     similarity = 1 - face_distances[0]
                     similarity_list.append(similarity)
 
-                    if results[0]:
-                        match = True
+    
+    average_similarity = sum(similarity_list) / len(similarity_list) if similarity_list else 0.0
+
+    # Determine valid: true if there are more True values than False values in compare_list
+    valid = compare_list.count(True) > compare_list.count(False) if compare_list else False
  
-    return jsonify({'match': match, 'similarity': similarity_list, 'compare': compare_list}), 200   
+    return jsonify({
+        'match': {
+            'similarity': average_similarity,
+            'valid': valid
+        },
+        'similarity': similarity_list,
+        'compare': compare_list
+    }), 200   
